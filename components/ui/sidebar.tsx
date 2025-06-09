@@ -5,17 +5,23 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { useMediaQuery } from "@/lib/hooks/use-media-query"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
+
 import { Slot } from "@radix-ui/react-slot"
+
+
 
 interface SidebarContextValue {
   isCollapsed: boolean
   setCollapsed: (value: boolean) => void
   isOpen: boolean
   setOpen: (value: boolean) => void
+
   toggleSidebar: () => void
+
 }
 
 const SidebarContext = React.createContext<SidebarContextValue | undefined>(undefined)
+
 
 export function SidebarProvider({
   children,
@@ -38,6 +44,14 @@ export function SidebarProvider({
       value={{ isCollapsed, setCollapsed, isOpen, setOpen, toggleSidebar }}
     >
       <div className={cn(className)}>{children}</div>
+
+export function SidebarProvider({ children }: { children: React.ReactNode }) {
+  const [isCollapsed, setCollapsed] = React.useState(false)
+  const [isOpen, setOpen] = React.useState(false)
+  return (
+    <SidebarContext.Provider value={{ isCollapsed, setCollapsed, isOpen, setOpen }}>
+      {children}
+
     </SidebarContext.Provider>
   )
 }
@@ -50,11 +64,26 @@ export function useSidebar() {
 
 export const SidebarTrigger = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
   ({ className, ...props }, ref) => {
+
     const { toggleSidebar } = useSidebar()
     return (
       <button
         ref={ref}
         onClick={toggleSidebar}
+
+    const isDesktop = useMediaQuery("(min-width: 768px)")
+    const { isCollapsed, setCollapsed, setOpen } = useSidebar()
+    return (
+      <button
+        ref={ref}
+        onClick={() => {
+          if (isDesktop) {
+            setCollapsed(!isCollapsed)
+          } else {
+            setOpen(true)
+          }
+        }}
+
         className={cn(
           "inline-flex items-center justify-center rounded-md p-2 hover:bg-sidebar-accent",
           className
@@ -103,6 +132,7 @@ export function SidebarInset({ className, children }: React.HTMLAttributes<HTMLD
     </div>
   )
 }
+
 
 export function SidebarHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return <div className={cn("px-4 py-2", className)} {...props} />
@@ -174,3 +204,4 @@ export function SidebarMenuSubButton({ asChild, className, ...props }: React.But
     />
   )
 }
+
