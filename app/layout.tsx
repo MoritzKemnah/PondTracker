@@ -43,15 +43,19 @@ export default function RootLayout({ children }: RootLayoutProps) {
           )}
         >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <SidebarProvider>
-              <div className="relative flex min-h-screen">
-                <AppSidebar />
-                <SidebarInset className="flex flex-col flex-1">
-                  <SiteHeader />
-                  <main className="flex-1">{children}</main>
-                </SidebarInset>
-              </div>
-            </SidebarProvider>
+            <div className="[--header-height:calc(theme(spacing.14))]">
+              <SidebarProvider className="flex flex-col min-h-screen">
+                <SiteHeader />
+                <div className="flex flex-1">
+                  <AppSidebar />
+                  <SidebarInset>
+                    <main className="flex flex-1 flex-col gap-4 p-4">
+                      {children}
+                    </main>
+                  </SidebarInset>
+                </div>
+              </SidebarProvider>
+            </div>
             <TailwindIndicator />
           </ThemeProvider>
         </body>
